@@ -1,10 +1,9 @@
 # Setup password system so it is stored in a file outside of github exposed directory
 try: 
   import os, sys
-  lib_path = os.path.abspath('../)
+  lib_path = os.path.abspath('../')
   sys.path.append(lib_path)
   import adpasswords
-  PASSWORD = adpasswords.noah
 
 except:
   print "couldn't setup passwords"
@@ -21,12 +20,11 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': 'PASSOWRD',          # See setup in 
-
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'adddistricts',                      # Or path to database file if using sqlite3.
+        'USER': 'glusenkamp',                      # Not used with sqlite3.
+        'PASSWORD': adpasswords.glusenkamp,          # See setup in 
+        'HOST': 'ec2-23-21-20-184.compute-1.amazonaws.com', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -126,10 +124,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+    'django.contrib.gis',
+    'ad',
 )
 
 # A sample logging configuration. The only tangible logging
