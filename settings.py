@@ -1,12 +1,9 @@
 # Setup password system so it is stored in a file outside of github exposed directory
-try: 
-  import os, sys
-  lib_path = os.path.abspath('../')
-  sys.path.append(lib_path)
-  import adpasswords
+import os
+import sys
 
-except:
-  print "couldn't setup passwords"
+lib_path = os.path.abspath('../')
+sys.path.append(lib_path)
 
 # Django settings for add_districts project. 
 DEBUG = True
@@ -22,8 +19,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'adddistricts',                      # Or path to database file if using sqlite3.
-        'USER': 'glusenkamp',                      # Not used with sqlite3.
-        'PASSWORD': adpasswords.glusenkamp ,          # See imports above
+        'USER': 'Django',                      # Not used with sqlite3.
+        'PASSWORD': 'password' ,          # See imports above
         'HOST': 'ec2-23-21-20-184.compute-1.amazonaws.com', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -152,3 +149,8 @@ LOGGING = {
         },
     }
 }
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
