@@ -7,7 +7,6 @@ class Version(models.Model):
   pub_url = models.CharField(max_length=200)
   date_valid = models.DateField()
   date_invalid = models.DateField()
-
   source_url = models.CharField(max_length=250)
   date_addded = models.DateField()
 
@@ -17,11 +16,16 @@ class Version(models.Model):
 class CD(models.Model):
 
   version = models.ForeignKey(Version)
-  
 
+  state_fips = models.CharField(max_length=2)
+  cd_fips = models.CharField(max_length=2)
+  geo_id = models.CharField(max_length=7)
+  name = models.CharField(max_length=50)
+  cd_session = models.CharField(max_length=3)
 
-
+  mpoly = models.MultiPolygonField()
+  objects = models.GeoManager()
 
   def __unicode__(self):
-  	return str(self)
+  	return self.name
 
