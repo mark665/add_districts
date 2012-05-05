@@ -1,0 +1,16 @@
+from django.contrib import admin
+from ad.models import Congress_Districts, Version
+
+class VersionAdmin(admin.ModelAdmin):
+  list_display = (
+		  'name',
+		  'pub',
+		  'pub_url',
+		  'date_valid',
+		  'date_invalid',
+		  'source_url',
+		  'date_addded',
+		 )
+
+admin.site.register(Congress_Districts, admin.GeoModelAdmin)
+admin.site.register(Version, VersionAdmin)
