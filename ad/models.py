@@ -13,7 +13,7 @@ class Version(models.Model):
   def __unicode__(self):
   	return self.name
 
-class CD(models.Model):
+class Congress_Districts(models.Model):
 
   version = models.ForeignKey(Version)
 

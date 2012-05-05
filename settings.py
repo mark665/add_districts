@@ -33,7 +33,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = None
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -89,7 +89,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'u27owrnn(0d)=!5292=7w5k8^ivxg2=pf94fjkatu-%1+@qn@0'
+SECRET_KEY = 'ualkshj;fd;ajsfl;haoihnnoai;e27owrnn(0d)=!5292=7w5k8^ivxg2=pf94fjkatu-%1+@qn@0'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
