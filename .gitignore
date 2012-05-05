@@ -1,2 +1,5 @@
 # ignore all python compiled files
 *.pyc
+
+#ignore gedit temp files
+*~ 
