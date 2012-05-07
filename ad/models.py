@@ -19,3 +19,48 @@ class Congress_Districts(models.Model):
   def __unicode__(self):
     return self.namelsad
 
+class Counties(models.Model):
+  statefp10 = models.CharField(max_length=2)
+  countyfp10 = models.CharField(max_length=3)
+  countyns10 = models.CharField(max_length=8)
+  geoid10 = models.CharField(max_length=5)
+  name10 = models.CharField(max_length=100)
+  namelsad10 = models.CharField(max_length=100)
+  lsad10 = models.CharField(max_length=2)
+  classfp10 = models.CharField(max_length=2)
+  mtfcc10 = models.CharField(max_length=5)
+  csafp10 = models.CharField(max_length=3)
+  cbsafp10 = models.CharField(max_length=5)
+  metdivfp10 = models.CharField(max_length=5)
+  funcstat10 = models.CharField(max_length=1)
+  aland10 = models.FloatField()
+  awater10 = models.FloatField()
+  intptlat10 = models.CharField(max_length=11)
+  intptlon10 = models.CharField(max_length=12)
+  geom = models.MultiPolygonField(srid=4326)
+  objects = models.GeoManager()
+
+  def __unicode__(self):
+    return self.namelsad10
+
+class States(models.Model):
+  region = models.CharField(max_length=2)
+  division = models.CharField(max_length=2)
+  statefp = models.CharField(max_length=2)
+  statens = models.CharField(max_length=8)
+  geoid = models.CharField(max_length=2)
+  stusps = models.CharField(max_length=2)
+  name = models.CharField(max_length=100)
+  lsad = models.CharField(max_length=2)
+  mtfcc = models.CharField(max_length=5)
+  funcstat = models.CharField(max_length=1)
+  aland = models.FloatField()
+  awater = models.FloatField()
+  intptlat = models.CharField(max_length=11)
+  intptlon = models.CharField(max_length=12)
+  geom = models.MultiPolygonField(srid=4326)
+  objects = models.GeoManager()
+
+  def __unicode__(self):
+    return self.name
+

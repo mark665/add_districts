@@ -1,10 +1,3 @@
-# Setup password system so it is stored in a file outside of github exposed directory
-import os
-import sys
-
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
 # Django settings for add_districts project. 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
