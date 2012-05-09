@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>AddDistrict</title>
+{% load static %}
+<!-- Stylesheets-->
+<link rel="stylesheet" type="text/css" href="{% get_static_prefix %}/css/style.css" />
+<link rel="stylesheet" type="text/css" href="{% get_static_prefix %}/css/leaflet.css" />
+<!--[if lte IE 8]>
+    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}/css/leaflet.ie.css" />
+<![endif]-->
+<script src="{% get_static_prefix %}/scripts/leaflet.js"></script>
+
+</head>
+
+<body>
+    <!-- Header Section-->
+    <div id="header">
+        <div id="title">Add District</div>
+        <div id="subtitle">One line description of the project</div>
+    </div>   
+
+    <div class="colmask rightmenu">
+        <div class="colleft">
+            <div class="col1">
+                <!-- Column 1 start -->			
+                <div id="map">
+				</div>
+                    <script>
+                            var map = new L.Map('map');
+                            var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/e74bf6d54e334b95af49cbb6b91a6d18/997/256/{z}/{x}/{y}.png',
+                                cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+                                cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
+                            map.setView(new L.LatLng(47.60, -122.21), 11).addLayer(cloudmade);
+                            
+                            // create the tile layer with correct attribution
+	//var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	//var osmAttrib='Map data © OpenStreetMap contributors';
+    //var osmUrl='http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg';
+	//var osmAttrib='Map data &copy; 2012 OpenStreetMap contributors, Tiles by Mike Migurski of Stamen Design';
+	//var osm = new L.TileLayer(osmUrl, {minZoom: 4, maxZoom: 18, attribution: osmAttrib});
+    //map.setView(new L.LatLng(47.36, -120.35), 15).addLayer(osm);
+    
+
+
+    
+                            var markerLocation = new L.LatLng(47.60, -122.21),
+                            marker = new L.Marker(markerLocation);
+                            map.addLayer(marker);
+                            marker.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
+                            
+                           
+                            map.on('click', onMapClick);
+                            var popup = new L.Popup();
+                            function onMapClick(e) {
+                                var latlngStr = '(' + e.latlng.lat.toFixed(3) + ', ' + e.latlng.lng.toFixed(3) + ')';
+                                popup.setLatLng(e.latlng);
+                                popup.setContent("You clicked the map at " + latlngStr);
+                                map.openPopup(popup);
+                            }
+                        </script>
+                
+               <!-- Column 1 end -->
+            </div>
+            <div class="col2">
+                <!-- Column 2 start -->
+
+                <h2>User Story</h2>
+                <p>Data managers at political advocacy organizations need to find the political districts for donor and volunteer lists. Without in-house GIS skill this gets outsourced at great expense or it just doesn’t get done at all. Our web-app will append all available political districts as columns to a user uploaded csv of addresses. Each row will be geocoded and then spatial queried to append the appropriate district values. After this processing, the file will be available for download. The data manager will then be able to create reports on their data and summarize accurately on their relevant political geographies. </p>
+                
+					<form id=options>
+					<fieldset>
+							<legend>Upload File</legend>
+								<button type=submit>Upload File</button>
+						</fieldset>
+						<fieldset>
+							<legend>Choose Options</legend>
+								<p>
+									<label for=name>Congressional District</label>	
+									<input id=cong_district name=cong_district type=checkbox>
+							
+								</p>
+								<p>
+									<input id=leg_district name=leg_district type=checkbox>
+									<label for=name>Legislative District</label>
+								</p>
+								<p>
+									<input id=county name=county type=checkbox>
+									<label for=name>County</label>
+								</p>
+						</fieldset>	
+						<fieldset>
+							<legend>Process List</legend>
+								<button type=submit>Process</button>
+						</fieldset>
+						<fieldset>
+							<legend>Get Results</legend>
+								<button type=submit>Downlaod File</button>
+								<button type=submit>View in Map</button>
+						</fieldset>
+					</form>
+
+
+                <!-- Column 2 end -->
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer">
+        <p>Team: <a href="mailto:mark665@gmail.com">Mark Price</a> | <a href="mailto:noah.glusenkamp@gmail.com">Noah Glusenkamp</a> | <a href="mailto:shruti_mukhtyar@hotmail.com">Shruti Mukthtyar</a></p>
+
+    </div>
+</body>
+</html>
