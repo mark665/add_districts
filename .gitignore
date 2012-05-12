@@ -2,4 +2,7 @@
 *.pyc
 
 #ignore gedit temp files
-*~ 
+*~
+
+#ignore local_settings for django
+local_settings.py 
