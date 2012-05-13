@@ -1,6 +1,6 @@
 import os
 from django.contrib.gis.utils import LayerMapping
-from models import Congress_Districts, Counties, States
+from models import Congress_Districts, Counties, States, Blocks
 
 congress_districts_mapping = {
     'statefp' : 'STATEFP',
@@ -57,6 +57,27 @@ state_mapping = {
     'geom' : 'MULTIPOLYGON',
 }
 
+blocks_mapping = {
+    'statefp' : 'STATEFP',
+    'countyfp' : 'COUNTYFP',
+    'statefp10' : 'STATEFP10',
+    'countyfp10' : 'COUNTYFP10',
+    'tractce10' : 'TRACTCE10',
+    'blockce10' : 'BLOCKCE10',
+    'suffix1ce' : 'SUFFIX1CE',
+    'geoid' : 'GEOID',
+    'name' : 'NAME',
+    'mtfcc' : 'MTFCC',
+    'ur10' : 'UR10',
+    'uace10' : 'UACE10',
+    'funcstat' : 'FUNCSTAT',
+    'aland' : 'ALAND',
+    'awater' : 'AWATER',
+    'intptlat' : 'INTPTLAT',
+    'intptlon' : 'INTPTLON',
+    'geom' : 'MULTIPOLYGON',
+}
+
 
 congress_districts = os.path.abspath('../shapes/tl_2011_us_cd112/tl_2011_us_cd112.shp')
 
@@ -64,10 +85,12 @@ counties = os.path.abspath('../shapes/TIGER2010/COUNTY/tl_2010_us_county10/tl_20
 
 states = os.path.abspath('../shapes/TIGER2011/STATE/tl_2011_us_state.shp')
 
+blocks = os.path.abspath('../shapes/TABBLOCK/tl_2011_53_tabblock.shp')
+
 
 
 def run(verbose=True):
-  lm = LayerMapping(States, states, state_mapping, transform=True, source_srs='4269', encoding='iso-8859-1')
+  lm = LayerMapping(Blocks, blocks, blocks_mapping, transform=True, source_srs='4269', encoding='iso-8859-1')
 
   lm.save(strict=True, verbose=verbose)
 

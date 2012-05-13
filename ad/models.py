@@ -61,6 +61,29 @@ class States(models.Model):
   geom = models.MultiPolygonField(srid=4326)
   objects = models.GeoManager()
 
+class Blocks(models.Model):
+  statefp = models.CharField(max_length=2)
+  countyfp = models.CharField(max_length=3)
+  statefp10 = models.CharField(max_length=2)
+  countyfp10 = models.CharField(max_length=3)
+  tractce10 = models.CharField(max_length=6)
+  blockce10 = models.CharField(max_length=4)
+  suffix1ce = models.CharField(max_length=1)
+  geoid = models.CharField(max_length=16)
+  name = models.CharField(max_length=11)
+  mtfcc = models.CharField(max_length=5)
+  ur10 = models.CharField(max_length=1)
+  uace10 = models.CharField(max_length=5)
+  funcstat = models.CharField(max_length=1)
+  aland = models.FloatField()
+  awater = models.FloatField()
+  intptlat = models.CharField(max_length=11)
+  intptlon = models.CharField(max_length=12)
+  geom = models.MultiPolygonField(srid=4326)
+  objects = models.GeoManager()
+
+
+
   def __unicode__(self):
     return self.name
 
