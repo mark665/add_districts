@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 
 class Congress_Districts(models.Model):
@@ -94,4 +95,4 @@ def get_media_upload_dir(instance, filename):
 
 class Address_List(models.Model):
   user = models.ForeignKey(User)
-  address_list = models.FileField(upload_to=get_media_upload_dir) 
+  address_list = models.FileField(upload_to=get_media_upload_dir)

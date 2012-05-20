@@ -4,5 +4,8 @@
 #ignore gedit temp files
 *~
 
+#ignore media files
+media/*
+
 #ignore local_settings for django
 local_settings.py 
