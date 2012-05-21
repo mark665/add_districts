@@ -16,7 +16,7 @@
 <body>
     <!-- Header Section-->
     <div id="header">
-        <div id="title">Add District</div>
+        <div id="title">Add Districts</div>
     </div>   
 
     <div class="colmask rightmenu">
@@ -53,67 +53,57 @@
             <div class="col2">
                 <!-- Column 2 start -->
 
-                <h2>Form</h2>
-                <!-- List of uploaded documents -->
-                {% if documents %}
-                    <ul>
-                        {% for document in documents %}
-                            <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No documents.</p>
-                {% endif %}
-                
-                {% if contents %}
-                    <p> Got Content </p>
-                {% else %}
-                    <p>No content</p>
-                {% endif %}
+
+		You asked for {{districts_requested}}<br />
+
                 <!-- Upload form. Note enctype attribute! -->
-                <form action="" method="post" enctype="multipart/form-data">
+                
+		<form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ form.non_field_errors }}
                     {{ form.docfile.help_text }}
                     {{ form.docfile.label_tag }}
                     {{ form.docfile.errors }}
                     {{ form.docfile }}
-                    <input type="submit" value="Upload" />
-                </form>
-					 <!-- <form id=options>
-					<fieldset>
-							<legend>Upload File</legend>
-								<button type=submit>Upload File</button>
-						</fieldset>
-						<fieldset>
-							<legend>Choose Options</legend>
-								<p>
-									<label for=name>Congressional District</label>	
-									<input id=cong_district name=cong_district type=checkbox>
+
+
+			<fieldset>
+				<legend>Choose Options</legend>
+				<p>
+					<input type=checkbox name=district value=Congress_Districts>					
+					<label for=name>Congress District</label>						
 							
-								</p>
-								<p>
-									<input id=leg_district name=leg_district type=checkbox>
-									<label for=name>Legislative District</label>
-								</p>
-								<p>
-									<input id=county name=county type=checkbox>
-									<label for=name>County</label>
-								</p>
-						</fieldset>	
-						<fieldset>
-							<legend>Process List</legend>
-								<button type=submit>Process</button>
-						</fieldset>
-						<fieldset>
-							<legend>Get Results</legend>
-								<button type=submit>Downlaod File</button>
-								<button type=submit>View in Map</button>
-						</fieldset>
-					</form>-->
+				</p>
+				<p>
+					<input  type=checkbox name=district value=State_Leg_Upper>	
+					<label for=name>State Leg Upper</label>
+				</p>
+				<p>
+					<input  type=checkbox name=district value=State_Leg_Lower>	
+					<label for=name>State Leg Lower</label>
+				</p>
+				<p>
+					<input  type=checkbox name=district value=Counties>
+					<label for=name>Counties</label>
+				</p>
+				<p>
+					<input  type=checkbox name=district value=VTDs>
+					<label for=name>Precincts</label>
+				</p>
+				<p>
+					<input  type=checkbox name=district value=Blocks>
+					<label for=name>Census Blocks</label>
+				</p>
+			</fieldset>	
+		 	<fieldset>
+				<legend></legend>
+                    		<input type="submit" value="Submit Job" />
+            		</fieldset>
+		</form>
 
+		Files was {{contents}}
 
-                <!-- Column 2 end -->
+                
             </div>
         </div>
     </div>
