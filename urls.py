@@ -1,5 +1,5 @@
-from django.conf.urls.defaults import patterns, include, url
-
+from django.conf.urls.defaults import * 
+from django.views.generic.simple import direct_to_template
 # Use geogjango admin
 from django.contrib.gis import admin
 
@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     # url(r'^list/$', 'ad.views.list', name='list'),
 
     # url(r'^add_districts/', include('add_districts.foo.urls')),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

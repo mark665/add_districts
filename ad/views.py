@@ -1,3 +1,4 @@
+
 from ad.models import *
 from ad.forms import *
 from ad.geocode import handle_uploaded_file
@@ -6,7 +7,14 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+=======
+from django.template import Context,loader
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from ad.models import *
 
+
+@login_required
 def home(request):
     #Handle file upload
     if request.method == "POST":

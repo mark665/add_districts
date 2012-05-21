@@ -1,4 +1,6 @@
 from django.contrib.gis.db import models
+from django.conf import settings
+from django.contrib.auth.models import User
 
 class Congress_Districts(models.Model):
   statefp = models.CharField(max_length=2)
@@ -88,12 +90,20 @@ class Blocks(models.Model):
   def __unicode__(self):
     return self.name
 
+
 #class to handle file upload    
 class Document(models.Model):
   #docfile = models.FileField(upload_to='documents/%Y/%m/%d')
   docfile = models.FileField(upload_to='upload/')
   
 
+def get_media_upload_dir(instance, filename):
+    user_id  = instance.user.id
+    upload_dir = "%s/%d/%s" % (settings.MEDIA_ROOT, user_id, filename)
+    print "Upload dir set to: %s" % upload_dir
+    return upload_dir
 
-
+class Address_List(models.Model):
+  user = models.ForeignKey(User)
+  address_list = models.FileField(upload_to=get_media_upload_dir)
 
