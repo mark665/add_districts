@@ -107,3 +107,5 @@ class Address_List(models.Model):
   user = models.ForeignKey(User)
   address_list = models.FileField(upload_to=get_media_upload_dir)
 
+  def __unicode__(self):
+    return self.address_list

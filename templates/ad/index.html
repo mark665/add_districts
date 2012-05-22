@@ -53,12 +53,12 @@
             <div class="col2">
                 <!-- Column 2 start -->
 
-                <h2>Form</h2>
+                <h2>Files</h2>
                 <!-- List of uploaded documents -->
                 {% if documents %}
                     <ul>
                         {% for document in documents %}
-                            <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
+                            <li><a href="{{ document.address_list.url }}">{{ document.address_list.name }}</a></li>
                         {% endfor %}
                     </ul>
                 {% else %}
