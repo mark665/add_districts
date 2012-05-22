@@ -20,7 +20,9 @@ def home(request):
             newdoc = Address_List(user=request.user, address_list = request.FILES['docfile'])
             newdoc.save()
 
-            contents = handle_uploaded_file(newdoc.address_list, request.POST.getlist('district'))
+            districts_requested = request.POST.getlist('district')
+
+            result_file = handle_uploaded_file(newdoc.address_list, districts_requested)
 
             # Load list of documents in cache dir
             documents = Address_List.objects.filter(user_id=request.user.id)
@@ -28,7 +30,7 @@ def home(request):
             # Render home page with the documents, form, requested districts
             return render_to_response(
                 'ad/index.html',
-                {'documents': documents, 'form': form, 'districts_requested': request.POST.getlist('district'), 'contents': contents},
+                {'documents': documents, 'form': form, 'districts_requested': request.POST.getlist('district'), 'contents': result_file},
                 context_instance=RequestContext(request)
             )
 

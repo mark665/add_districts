@@ -83,35 +83,37 @@
                     {{ form.docfile.errors }}
                     {{ form.docfile }}
 
-
-			<fieldset>
-				<legend>Choose Options</legend>
-				<p>
-					<input type=checkbox name=district value=Congress_Districts>					
-					<label for=name>Congress District</label>						
-							
-				</p>
-				<p>
-					<input  type=checkbox name=district value=State_Leg_Upper>	
-					<label for=name>State Leg Upper</label>
-				</p>
-				<p>
-					<input  type=checkbox name=district value=State_Leg_Lower>	
-					<label for=name>State Leg Lower</label>
-				</p>
-				<p>
-					<input  type=checkbox name=district value=Counties>
-					<label for=name>Counties</label>
-				</p>
-				<p>
-					<input  type=checkbox name=district value=VTDs>
-					<label for=name>Precincts</label>
-				</p>
-				<p>
-					<input  type=checkbox name=district value=Blocks>
-					<label for=name>Census Blocks</label>
-				</p>
-			</fieldset>	
+            <fieldset>
+                <legend>Choose Options</legend>
+                <p>
+                    <input type=checkbox name=district value=States>                    
+                    <label for=name>State</label>                       
+                </p>
+                <p>
+                    <input type=checkbox name=district value=Counties>
+                    <label for=name>County</label>
+                </p>
+                <p>
+                    <input type=checkbox name=district value=Congress_Districts>                  
+                    <label for=name>Congress District</label>                             
+                </p>
+                <p>
+                    <input type=checkbox name=district value=State_Leg_Upper>   
+                    <label for=name>State Leg Upper</label>
+                </p>
+                <p>
+                    <input type=checkbox name=district value=State_Leg_Lower>   
+                    <label for=name>State Leg Lower</label>
+                </p>
+                <p>
+                    <input  type=checkbox name=district value=VTDs>
+                    <label for=name>Precinct</label>
+                </p>
+                <p>
+                    <input  type=checkbox name=district value=Blocks>
+                    <label for=name>Census Block</label>
+                </p>
+            </fieldset>
 		 	<fieldset>
 				<legend></legend>
                     		<input type="submit" value="Submit Job" />

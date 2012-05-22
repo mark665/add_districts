@@ -4,6 +4,9 @@
 #ignore gedit temp files
 *~
 
+#ignore eclipse temp files
+*.bak
+
 #ignore media files
 media/*
 
