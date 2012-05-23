@@ -1,6 +1,5 @@
 from django.contrib.gis.geos import Point
 import requests
-import simplejson
 from ad.models import *
 
 mapquest_osm_url = 'http://open.mapquestapi.com/nominatim/v1/search'
@@ -46,6 +45,7 @@ def handle_uploaded_file(uploaded_file, districts_requested):
 
         for result in r.json:
           lat, lon = result['lat'], result['lon']
+
 
         line.append(lat)
         line.append(lon)

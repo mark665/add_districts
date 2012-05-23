@@ -4,8 +4,11 @@
 #ignore gedit temp files
 *~
 
-#ignore eclipse temp files
-*.bak
+#ignore virtualenv files
+/bin
+/build
+/lib
+lib64
 
 #ignore media files
 media/*
