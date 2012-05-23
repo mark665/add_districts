@@ -42,15 +42,13 @@ def handle_uploaded_file(uploaded_file, districts_requested):
         }
         
         r = requests.get(mapquest_osm_url, params=payload)
+        
+        latitude, longitude = r.json[0]['lat'], r.json[0]['lon']
 
-        for result in r.json:
-          lat, lon = result['lat'], result['lon']
+        line.append(latitude)
+        line.append(longitude)
 
-
-        line.append(lat)
-        line.append(lon)
-
-        address_point = Point(float(lon), float(lat))
+        address_point = Point(float(longitude), float(latitude))
 
         for district in districts_requested:
 
@@ -63,7 +61,19 @@ def handle_uploaded_file(uploaded_file, districts_requested):
                 line.append(Counties.objects.get(geom__contains = address_point).name10)
 
             if district == 'Congress_Districts':
-                line.append(Congress_Districts.objects.get(geom__contains = address_point).cd112fp)       
+                line.append(Congress_Districts.objects.get(geom__contains = address_point).cd112fp)    
+ 
+            if district == 'State_Leg_Upper':
+                line.append(State_Leg_Upper.objects.get(geom__contains = address_point)) 
+
+            if district == 'State_Leg_Lower':
+                line.append(State_Leg_Lower.objects.get(geom__contains = address_point))
+
+            if district == 'Precinct':
+                line.append(VTDs.objects.get(geom__contains = address_point))
+
+            if district == 'Blocks':
+                line.append(Blocks.objects.get(geom__contains = address_point).name)  
 
         results.append(line)
 
