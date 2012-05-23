@@ -17,7 +17,7 @@ def home(request):
     if request.method == "POST":
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            newdoc = Address_List(user=request.user, address_list = request.FILES['docfile'])
+            newdoc = Address_List(user=request.user, address_list=request.FILES['docfile'], processed=False)
             newdoc.save()
 
             districts_requested = request.POST.getlist('district')
