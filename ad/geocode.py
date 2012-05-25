@@ -1,5 +1,6 @@
 from django.contrib.gis.geos import Point
 import requests
+import csv
 from ad.models import *
 
 mapquest_osm_url = 'http://open.mapquestapi.com/nominatim/v1/search'
@@ -14,11 +15,11 @@ def handle_uploaded_file(uploaded_file, districts_requested):
     # return value will be a list of lists (rows of cells)
     results = []
 
-    #TODO read file as a csv with error checking, until then:
-    # unpack address file on newlines
-    addresses = uploaded_file.read().split('\n')
-    # get rid of cruft
-    addresses.pop(-1)
+    # TODO use csv.Sniffer to handle appropriate dialect
+    # TODO Strip out commas from addresses (and other troublesome characters) 
+    
+    # open file as csv unpack on newlines
+    addresses = csv.reader(uploaded_file.read().split('\n')[:-1])
     
     for address in addresses:
 
@@ -52,28 +53,47 @@ def handle_uploaded_file(uploaded_file, districts_requested):
 
         for district in districts_requested:
 
-            #TODO handle lookups that aren't found.
+            if district == 'states':
+                try:
+                    line.append(States.objects.get(geom__contains = address_point).name)
+                except States.DoesNotExist:
+                    line.append('')
 
-            if district == 'States':
-                line.append(States.objects.get(geom__contains = address_point).name) 
+            if district == 'counties':
+                try:
+                    line.append(Counties.objects.get(geom__contains = address_point).name10)
+                except Counties.DoesNotExist:
+                    line.append('')
 
-            if district == 'Counties':
-                line.append(Counties.objects.get(geom__contains = address_point).name10)
+            if district == 'congress_districts':
+                try:
+                    line.append(Congress_Districts.objects.get(geom__contains = address_point).cd112fp)    
+                except Congress_Districts.DoesNotExist:
+                    line.append('')
 
-            if district == 'Congress_Districts':
-                line.append(Congress_Districts.objects.get(geom__contains = address_point).cd112fp)    
- 
-            if district == 'State_Leg_Upper':
-                line.append(State_Leg_Upper.objects.get(geom__contains = address_point)) 
+            if district == 'state_leg_upper':
+                try:
+                    line.append(State_Leg_Upper.objects.get(geom__contains = address_point))
+                except State_Leg_Upper.DoesNotExist:
+                    line.append('') 
 
-            if district == 'State_Leg_Lower':
-                line.append(State_Leg_Lower.objects.get(geom__contains = address_point))
+            if district == 'state_leg_lower':
+                try:
+                    line.append(State_Leg_Lower.objects.get(geom__contains = address_point))
+                except State_Leg_Lower.DoesNotExist:
+                    line.append('')
 
-            if district == 'Precinct':
-                line.append(VTDs.objects.get(geom__contains = address_point))
+            if district == 'vtds':
+                try:
+                    line.append(VTDs.objects.get(geom__contains = address_point))
+                except VTDs.DoesNotExist:
+                    line.append('')
 
-            if district == 'Blocks':
-                line.append(Blocks.objects.get(geom__contains = address_point).name)  
+            if district == 'blocks':
+                try:
+                    line.append(Blocks.objects.get(geom__contains = address_point).name)  
+                except Blocks.DoesNotExist:
+                    line.append('')
 
         results.append(line)
 

@@ -30,7 +30,7 @@ def home(request):
             # Render home page with the documents, form, requested districts
             return render_to_response(
                 'ad/index.html',
-                {'documents': documents, 'form': form, 'districts_requested': districts_requested, 'contents': result_file},
+                {'documents': documents[:5], 'form': form, 'districts_requested': districts_requested, 'contents': result_file},
                 context_instance=RequestContext(request)
             )
 
@@ -49,6 +49,6 @@ def home(request):
         # Render home page with the documents and the form
         return render_to_response(
         'ad/index.html',
-        {'documents': documents, 'form': form},
+        {'documents': documents[:5], 'form': form},
         context_instance=RequestContext(request)
     	)
