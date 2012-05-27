@@ -13,6 +13,9 @@ from django.http import HttpResponse
 
 @login_required
 def home(request):
+
+    documents = []
+    
     # Handle file upload
     if request.method == "POST":
         form = DocumentForm(request.POST, request.FILES)

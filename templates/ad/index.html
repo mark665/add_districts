@@ -1,135 +1,143 @@
-<!DOCTYPE html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>AddDistrict</title>
-{% load static %}
-<!-- Stylesheets-->
-<link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/style.css" />
-<link rel="stylesheet" type="text/css" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css"" />
-<!--[if lte IE 8]>
-    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}/css/leaflet.ie.css" />
-<![endif]-->
-<script src="http://code.leafletjs.com/leaflet-0.3.1/leaflet.js"></script>
+{% extends "base.html" %}
 
-</head>
-
-<body>
-    <!-- Header Section-->
-    <div id="header">
-        <div id="title">Add Districts</div>
-    </div>   
-
-    <div class="colmask rightmenu">
-        <div class="colleft">
-            <div class="col1">
-                <!-- Column 1 start -->			
-                <div id="map">
-				</div>
-                    <script>
-                            var map = new L.Map('map');
-                            var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/e74bf6d54e334b95af49cbb6b91a6d18/998/256/{z}/{x}/{y}.png',
-                                cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
-                                cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
-                            map.setView(new L.LatLng(47.60, -122.21), 11).addLayer(cloudmade);                           
+{% block content %}
+<div class="background">	
     
-                            var markerLocation = new L.LatLng(47.60, -122.21),
-                            marker = new L.Marker(markerLocation);
-                            map.addLayer(marker);
-                            marker.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
-                            
-                           
-                            map.on('click', onMapClick);
-                            var popup = new L.Popup();
-                            function onMapClick(e) {
-                                var latlngStr = '(' + e.latlng.lat.toFixed(3) + ', ' + e.latlng.lng.toFixed(3) + ')';
-                                popup.setLatLng(e.latlng);
-                                popup.setContent("You clicked the map at " + latlngStr);
-                                map.openPopup(popup);
-                            }
-                        </script>
-                
-               <!-- Column 1 end -->
-            </div>
-            <div class="col2">
-                <!-- Column 2 start -->
-
-                <h2>Files</h2>
-                <!-- List of uploaded documents -->
-                {% if documents %}
-                    <ul>
-                        {% for document in documents %}
-                            <li><a href="{{ document.address_list.url }}">{{ document.address_list.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No documents.</p>
-                {% endif %}
-                
-                {% if contents %}
-                    <p> Got Content </p>
-                {% else %}
-                    <p>No content</p>
-                {% endif %}
-
-		You asked for {{districts_requested}}<br />
-
-                <!-- Upload form. Note enctype attribute! -->
-                
-		<form action="" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form.non_field_errors }}
-                    {{ form.docfile.help_text }}
-                    {{ form.docfile.label_tag }}
-                    {{ form.docfile.errors }}
-                    {{ form.docfile }}
-
-            <fieldset>
-                <legend>Choose Options</legend>
-                <p>
-                    <input type=checkbox name=district value=States>                    
-                    <label for=name>State</label>                       
-                </p>
-                <p>
-                    <input type=checkbox name=district value=Counties>
-                    <label for=name>County</label>
-                </p>
-                <p>
-                    <input type=checkbox name=district value=Congress_Districts>                  
-                    <label for=name>Congress District</label>                             
-                </p>
-                <p>
-                    <input type=checkbox name=district value=State_Leg_Upper>   
-                    <label for=name>State Leg Upper</label>
-                </p>
-                <p>
-                    <input type=checkbox name=district value=State_Leg_Lower>   
-                    <label for=name>State Leg Lower</label>
-                </p>
-                <p>
-                    <input  type=checkbox name=district value=VTDs>
-                    <label for=name>Precinct</label>
-                </p>
-                <p>
-                    <input  type=checkbox name=district value=Blocks>
-                    <label for=name>Census Block</label>
-                </p>
-            </fieldset>
-		 	<fieldset>
-				<legend></legend>
-                    		<input type="submit" value="Submit Job" />
-            		</fieldset>
-		</form>
-
-		Files was {{contents}}
-
-                
-            </div>
-        </div>
+    <!-- div that holds the map -->
+    <div id="map" style="position: relative; height: 1016px;">
     </div>
+    <!-- javascript that polulated the map div -->
+    <script>
+        var map = new L.Map('map');
+        var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/e74bf6d54e334b95af49cbb6b91a6d18/998/256/{z}/{x}/{y}.png',
+            cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+            cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
+        /*map.setView(new L.LatLng(47.60, -122.21), 11).addLayer(cloudmade);   */
+           map.setView(new L.LatLng(39.747, -105), 11).addLayer(cloudmade);     
+
+        /*var markerLocation = new L.LatLng(47.60, -122.21),
+        marker = new L.Marker(markerLocation);
+        map.addLayer(marker);
+        marker.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();*/
+        
+       
+        map.on('click', onMapClick);
+        var popup = new L.Popup();
+        function onMapClick(e) {
+            var latlngStr = '(' + e.latlng.lat.toFixed(3) + ', ' + e.latlng.lng.toFixed(3) + ')';
+            popup.setLatLng(e.latlng);
+            popup.setContent("You clicked the map at " + latlngStr);
+            map.openPopup(popup);
+        }
+        
+        
+        var geojsonLayer = new L.GeoJSON(null, {
+            pointToLayer: function (latlng){
+                return new L.CircleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+            }
+        }); 
+        
+        geojsonLayer.on("featureparse", function (e) {
+var popupContent = "<p>I started out as a GeoJSON " + e.geometryType + ", but now I'm a Leaflet vector!</p>";
+if (e.geometryType == "Point") {
+popupContent += "<p>This GeoJSON Point has been transformed into a <a href='http://leaflet.cloudmade.com/reference.html#circlemarker'>CircleMarker</a> by passing a <code>pointToLayer</code> function in the <a href='http://leaflet.cloudmade.com/reference.html#geojson-options'>GeoJSON options</a> when instantiating the GeoJSON layer. View source for details.</p>";
+}
+if (e.properties && e.properties.popupContent) {
+popupContent += e.properties.popupContent;
+}
+e.layer.bindPopup(popupContent);
+if (e.properties && e.properties.style && e.layer.setStyle) {
+e.layer.setStyle(e.properties.style);
+}
+}); 
+
+map.addLayer(geojsonLayer)
+
+geojsonLayer.addGeoJSON(bicycleRental);
+        
+    </script>
     
-    <div id="footer">
-        <p>Team: <a href="mailto:mark665@gmail.com">Mark Price</a> | <a href="mailto:noah.glusenkamp@gmail.com">Noah Glusenkamp</a> | <a href="mailto:shruti_mukhtyar@hotmail.com">Shruti Mukthtyar</a></p>
+    <div class="menu">
+        <h2>Files</h2>-->
+            <!-- List of uploaded documents 
+            {% if documents %}
+                <ul>
+                    {% for document in documents %}
+                        <li><a href="{{ document.address_list.url }}">{{ document.address_list.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No documents.</p>
+            {% endif %}-->
+            
+            {% if contents %}
+                <p> Got Content </p>
+            {% else %}
+                <p>No content</p>
+            {% endif %}
 
+            You asked for {{districts_requested}}<br />
+
+            <!-- Upload form. Note enctype attribute! -->
+            
+        <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {{ form.docfile.help_text }}
+                {{ form.docfile.label_tag }}
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+
+        <fieldset>
+            <legend>Choose Options</legend>
+            <p>
+                <input type=checkbox name=district value=States>                    
+                <label for=name>State</label>                       
+            </p>
+            <p>
+                <input type=checkbox name=district value=Counties>
+                <label for=name>County</label>
+            </p>
+            <p>
+                <input type=checkbox name=district value=Congress_Districts>                  
+                <label for=name>Congress District</label>                             
+            </p>
+            <p>
+                <input type=checkbox name=district value=State_Leg_Upper>   
+                <label for=name>State Leg Upper</label>
+            </p>
+            <p>
+                <input type=checkbox name=district value=State_Leg_Lower>   
+                <label for=name>State Leg Lower</label>
+            </p>
+            <p>
+                <input  type=checkbox name=district value=VTDs>
+                <label for=name>Precinct</label>
+            </p>
+            <p>
+                <input  type=checkbox name=district value=Blocks>
+                <label for=name>Census Block</label>
+            </p>
+        </fieldset>
+        <fieldset>
+            <legend></legend>
+                        <input type="submit" value="Submit Job" />
+                </fieldset>
+    </form>
+
+    Files was {{contents}}
+    
+    
+    <!-- End of menu div -->
     </div>
-</body>
-</html>
+            
+<!-- End of background div -->
+</div>
+{% endblock %}

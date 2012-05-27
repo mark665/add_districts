@@ -1,7 +1,8 @@
 from django.contrib.gis.geos import Point
 import requests
-import simplejson
+import csv
 from ad.models import *
+import json
 
 mapquest_osm_url = 'http://open.mapquestapi.com/nominatim/v1/search'
 mapquest_url = 'http://www.mapquestapi.com/geocoding/v1/address'
@@ -15,18 +16,18 @@ def handle_uploaded_file(uploaded_file, districts_requested):
     # return value will be a list of lists (rows of cells)
     results = []
 
-    #TODO read file as a csv with error checking, until then:
-    # unpack address file on newlines
-    addresses = uploaded_file.read().split('\n')
-    # get rid of cruft
-    addresses.pop(-1)
+    # TODO use csv.Sniffer to handle appropriate dialect
+    # TODO Strip out commas from addresses (and other troublesome characters)
+    
+    # open file as csv unpack on newlines
+    addresses = csv.reader(uploaded_file.read().split('\n')[:-1])
     
     for address in addresses:
 
         # hold this line as a list
         line = []
 
-        # first element in list of line is 
+        # first element in list of line is
         # an id that increments for each loop over the row
         line.append(row_id)
         row_id += 1
@@ -43,29 +44,85 @@ def handle_uploaded_file(uploaded_file, districts_requested):
         }
         
         r = requests.get(mapquest_osm_url, params=payload)
+        
+        latitude, longitude = r.json[0]['lat'], r.json[0]['lon']
 
-        for result in r.json:
-          lat, lon = result['lat'], result['lon']
+        line.append(latitude)
+        line.append(longitude)
 
-        line.append(lat)
-        line.append(lon)
-
-        address_point = Point(float(lon), float(lat))
+        address_point = Point(float(longitude), float(latitude))
 
         for district in districts_requested:
 
-            #TODO handle lookups that aren't found.
+            if district == 'states':
+                try:
+                    line.append(States.objects.get(geom__contains = address_point).name)
+                except States.DoesNotExist:
+                    line.append('')
 
-            if district == 'States':
-                line.append(States.objects.get(geom__contains = address_point).name) 
+            if district == 'counties':
+                try:
+                    line.append(Counties.objects.get(geom__contains = address_point).name10)
+                except Counties.DoesNotExist:
+                    line.append('')
 
-            if district == 'Counties':
-                line.append(Counties.objects.get(geom__contains = address_point).name10)
+            if district == 'congress_districts':
+                try:
+                    line.append(Congress_Districts.objects.get(geom__contains = address_point).cd112fp)
+                except Congress_Districts.DoesNotExist:
+                    line.append('')
 
-            if district == 'Congress_Districts':
-                line.append(Congress_Districts.objects.get(geom__contains = address_point).cd112fp)       
+            if district == 'state_leg_upper':
+                try:
+                    line.append(State_Leg_Upper.objects.get(geom__contains = address_point))
+                except State_Leg_Upper.DoesNotExist:
+                    line.append('')
+
+            if district == 'state_leg_lower':
+                try:
+                    line.append(State_Leg_Lower.objects.get(geom__contains = address_point))
+                except State_Leg_Lower.DoesNotExist:
+                    line.append('')
+
+            if district == 'vtds':
+                try:
+                    line.append(VTDs.objects.get(geom__contains = address_point))
+                except VTDs.DoesNotExist:
+                    line.append('')
+
+            if district == 'blocks':
+                try:
+                    line.append(Blocks.objects.get(geom__contains = address_point).name)
+                except Blocks.DoesNotExist:
+                    line.append('')
 
         results.append(line)
 
 
     return results
+    
+def list_to_geojson_dict(result_list):
+
+    #Convert the results list from above function to a geojson dict
+    #Some of this code can be eliminated if the result object in the above function is created
+    # as a dict
+    
+    geojson_dict = {
+        "type": "FeatureCollection",
+        "features": [crime_to_geojson(crime) for crime in crimes]
+    }
+    
+    return HttpResponse(json.dumps(geojson_dict), content_type='application/json')
+
+def result_to_geojson_feature(result):
+    return {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [result.pt.x, result.pt.y]
+        },
+        "properties": {
+            "description": result.description
+        },
+        "id": result.id,
+    }

@@ -1,3 +1,7 @@
+html {
+    height: 100%;
+
+}
 
 body {
 	margin:0;
@@ -33,7 +37,7 @@ img {
 
 /* Header styles */
 #header {
-height:80px;
+    height:80px;
 	clear:both;
 	float:left;
 	width:100%;
@@ -56,60 +60,37 @@ height:80px;
     padding-left:15px;
 }
 
-/* column container */
-.colmask {
-	position:relative;	/* This fixes the IE7 overflow hidden bug */
+.content {
+    position:relative;
+}
+
+.background{
+    position:relative;	/* This fixes the IE7 overflow hidden bug */
 	clear:both;
 	float:left;
 	width:100%;			/* width of whole page */
-	overflow:hidden;		/* This chops off any overhanging divs */
-}
-/* common column settings */
-.colright,
-.colmid,
-.colleft {
-	float:left;
-	width:100%;
-    height:100%;
-	position:relative;
-}
-.col1 {
-	float:left;
-	position:relative;
-	padding:0 0 0 0;
-	overflow:hidden;
-}
-.col2,
-.col3 {
-	float:left;
-	position:relative;
-	padding:0 0 1em 0;
-	overflow:hidden;
-}
-/* 2 Column (right menu) settings */
-.rightmenu {
-	background:#eee;		/* right column background colour */
-}
-.rightmenu .colleft {
-	right:25%;			/* right column width */
-	background:#fff;		/* left column background colour */
-}
-.rightmenu .col1 {
-	width:71%;			/* left column content width (left column width minus left and right padding) */
-	left:27%;			/* (right column width) plus (left column left padding) */
-}
-.rightmenu .col2 {
-	width:21%;			/* right column content width (right column width minus left and right padding) */
-	left:31%;			/* (right column width) plus (left column left and right padding) plus (right column left padding) */
+    overflow:hidden;		/* This chops off any overhanging divs */
 }
 
+.menu {
+     position: absolute;
+     left: 75%;
+     top:20%;
+     width:300px;
+     height:500px;
+     z-index:10;
+     padding: 5px;
+     opacity:0.75;
+     overflow:scroll;
+}
 #map {
     width:100%;
-    height:800px;
+    min-height:650px;
+    overflow:hidden;
 }
 
 /* Footer styles */
-#footer {
+/*#footer {
 	clear:both;
 	float:left;
 	width:100%;
@@ -118,7 +99,7 @@ height:80px;
 #footer p {
 	padding:10px;
 	margin:0;
-}
+}*/
 
 /* Form styles */
 form, fieldset, legend, ol, li {
@@ -127,10 +108,10 @@ padding: 0;
 }
 
 form#options {
-    background: none repeat scroll 0 0 #9CBC2C;
+    background: none repeat scroll 0 0 #3e3e3e;
     border-radius: 5px 5px 5px 5px;
     counter-reset: fieldsets;
-    padding: 20px;
+    padding: 2px;
     width: 100%;
 }
 form#options fieldset {
@@ -141,18 +122,18 @@ form#options fieldset:last-of-type {
     margin-bottom: 0;
 }
 form#options legend {
-    color: #384313;
-    font-size: 16px;
+    color: #FFFFFF;
+    font-size: 15px;
     font-weight: bold;
     padding-bottom: 10px;
-    text-shadow: 0 1px 1px #C0D576;
+    /*text-shadow: 0 1px 1px #384313;*/
 }
 form#options > fieldset > legend:before {
     content: "Step " counter(fieldsets, decimal) ": ";
     counter-increment: fieldsets;
 }
 form#options fieldset fieldset legend {
-    color: #111111;
+    color: #FFFFFF;
     font-size: 13px;
     font-weight: normal;
     padding-bottom: 0;
@@ -174,6 +155,7 @@ form#options ol ol li {
     float: left;
 }
 form#options label {
+    color: #FFFFFF;
     font-size: 13px;
     width: 80%;
 }
