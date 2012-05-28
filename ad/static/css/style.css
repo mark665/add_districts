@@ -82,6 +82,7 @@ img {
      padding: 5px;
      opacity:0.75;
      overflow:scroll;
+     background:#3e3e3e;
 }
 #map {
     width:100%;
@@ -108,8 +109,8 @@ padding: 0;
 }
 
 form#options {
-    background: none repeat scroll 0 0 #3e3e3e;
-    border-radius: 5px 5px 5px 5px;
+    /*background: none repeat scroll 0 0 #3e3e3e;
+    border-radius: 5px 5px 5px 5px;*/
     counter-reset: fieldsets;
     padding: 2px;
     width: 100%;
@@ -169,7 +170,7 @@ form#options fieldset fieldset label {
 form#options fieldset fieldset label:hover {
     cursor: pointer;
 }
-form#options input:not([type="radio"]), form#options textarea {
+/*form#options input:not([type="radio"]), form#options textarea {
 	float: left;
     background: none repeat scroll 0 0 #FFFFFF;
     border: medium none;
@@ -177,7 +178,7 @@ form#options input:not([type="radio"]), form#options textarea {
     font: italic 13px Georgia,"Times New Roman",Times,serif;
     outline: medium none;
     padding: 1px;
-}
+}*/
 form#options input:focus:not([type="submit"]), form#options textarea:focus {
     background: none repeat scroll 0 0 #EAEAEA;
 }
@@ -185,7 +186,7 @@ form#options input[type="radio"] {
     float: left;
     margin-right: 5px;
 }
-form#options button {
+/*form#options button {
     background: none repeat scroll 0 0 #384313;
     border: medium none;
     border-radius: 20px 20px 20px 20px;
@@ -197,6 +198,9 @@ form#options button {
     padding: 7px 25px;
     text-shadow: 0 1px 1px #000000;
     text-transform: uppercase;
+}*/
+form#options button {
+    display: block;
 }
 form#options button:hover {
     background: none repeat scroll 0 0 #1E2506;

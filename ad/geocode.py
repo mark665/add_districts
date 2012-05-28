@@ -13,7 +13,7 @@ def handle_uploaded_file(uploaded_file, districts_requested):
     # Create id variable for each row processed
     row_id = 1
 
-    # return value will be a list of lists (rows of cells)
+    # return value will be a list of dicts (rows of cells)
     results = []
 
     # TODO use csv.Sniffer to handle appropriate dialect
@@ -24,18 +24,18 @@ def handle_uploaded_file(uploaded_file, districts_requested):
     
     for address in addresses:
 
-        # hold this line as a list
-        line = []
+        # hold this line as a dict
+        line = {}
 
-        # first element in list of line is
+        # first key:value pair in line is
         # an id that increments for each loop over the row
-        line.append(row_id)
+        line.update({'id':row_id})
         row_id += 1
  
-        # second element in line list is address column row
-        line.append(address)
+        # second key:value pair in line is address
+        line.update({'addr':address})
 
-        # pack same address into a requests payload
+        # pack same address into a requests payload for the mapquest geocoding api
         payload = {
           'format': 'json',
           'q': address,
@@ -46,83 +46,87 @@ def handle_uploaded_file(uploaded_file, districts_requested):
         r = requests.get(mapquest_osm_url, params=payload)
         
         latitude, longitude = r.json[0]['lat'], r.json[0]['lon']
-
-        line.append(latitude)
-        line.append(longitude)
+        
+        # third and fourth key:value pairs
+        line.update({'lat':latitude})
+        line.update({'long':longitude})
 
         address_point = Point(float(longitude), float(latitude))
-
+        
+        print districts_requested
+        #add additional key:value pairs 
         for district in districts_requested:
 
-            if district == 'states':
+            if district == 'States':
+                print district
                 try:
-                    line.append(States.objects.get(geom__contains = address_point).name)
+                    line.update({'state':States.objects.get(geom__contains = address_point).name})
                 except States.DoesNotExist:
-                    line.append('')
+                    line.update({'state':''})
 
-            if district == 'counties':
+            if district == 'Counties':
                 try:
-                    line.append(Counties.objects.get(geom__contains = address_point).name10)
+                    line.update({'county':Counties.objects.get(geom__contains = address_point).name10})
                 except Counties.DoesNotExist:
-                    line.append('')
+                    line.update({'county':''})
 
-            if district == 'congress_districts':
+            if district == 'Congress_Districts':
                 try:
-                    line.append(Congress_Districts.objects.get(geom__contains = address_point).cd112fp)
+                    line.update({'congr':Congress_Districts.objects.get(geom__contains = address_point).cd112fp})
                 except Congress_Districts.DoesNotExist:
-                    line.append('')
+                    line.update({'congr':''})
 
-            if district == 'state_leg_upper':
+            if district == 'State_Leg_Upper':
                 try:
-                    line.append(State_Leg_Upper.objects.get(geom__contains = address_point))
+                    line.update({'stateupper':State_Leg_Upper.objects.get(geom__contains = address_point)})
                 except State_Leg_Upper.DoesNotExist:
-                    line.append('')
+                    line.update({'stateupper':''})
 
-            if district == 'state_leg_lower':
+            if district == 'State_Leg_Lower':
                 try:
-                    line.append(State_Leg_Lower.objects.get(geom__contains = address_point))
+                    line.update({'statelower':State_Leg_Lower.objects.get(geom__contains = address_point)})
                 except State_Leg_Lower.DoesNotExist:
-                    line.append('')
+                    line.update({'statelower':''})
 
-            if district == 'vtds':
+            if district == 'VTDs':
                 try:
-                    line.append(VTDs.objects.get(geom__contains = address_point))
+                    line.update({'vtd':VTDs.objects.get(geom__contains = address_point)})
                 except VTDs.DoesNotExist:
-                    line.append('')
+                    line.update({'vtd':''})
 
-            if district == 'blocks':
+            if district == 'Blocks':
                 try:
-                    line.append(Blocks.objects.get(geom__contains = address_point).name)
+                    line.update({'block':Blocks.objects.get(geom__contains = address_point).name})
                 except Blocks.DoesNotExist:
-                    line.append('')
+                    line.update({'block':''})
 
         results.append(line)
 
+    return results_to_geojson_dict(results)
 
-    return results
-    
-def list_to_geojson_dict(result_list):
+def results_to_geojson_dict(results):
 
-    #Convert the results list from above function to a geojson dict
-    #Some of this code can be eliminated if the result object in the above function is created
-    # as a dict
-    
+    #Convert the results list from above function to a geojson feature collection
     geojson_dict = {
         "type": "FeatureCollection",
-        "features": [crime_to_geojson(crime) for crime in crimes]
+        "features": [line_to_geojson_feature(i) for i in results]
     }
     
-    return HttpResponse(json.dumps(geojson_dict), content_type='application/json')
+    return geojson_dict
 
-def result_to_geojson_feature(result):
+def line_to_geojson_feature(line):
+
+    #Convert the line dict from above into a geojson feature
     return {
         "type": "Feature",
         "geometry": {
             "type": "Point",
-            "coordinates": [result.pt.x, result.pt.y]
+            "coordinates": [str(line['long']), str(line['lat'])]
         },
         "properties": {
-            "description": result.description
+            "address": line['addr'],
+            #TODO add in more dict items
+            "popupContent": "%s" %(line['state']) 
         },
-        "id": result.id,
+        "id": line['id'],
     }

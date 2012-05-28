@@ -10,7 +10,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'ad.views.home', name='home'),
-    # url(r'^list/$', 'ad.views.list', name='list'),
+    url(r'^index.json$', 'ad.views.results_geojson'),
 
     # url(r'^add_districts/', include('add_districts.foo.urls')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),

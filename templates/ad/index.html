@@ -8,19 +8,14 @@
     </div>
     <!-- javascript that polulated the map div -->
     <script>
+    
+
         var map = new L.Map('map');
         var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/e74bf6d54e334b95af49cbb6b91a6d18/998/256/{z}/{x}/{y}.png',
             cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
             cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
-        /*map.setView(new L.LatLng(47.60, -122.21), 11).addLayer(cloudmade);   */
-           map.setView(new L.LatLng(39.747, -105), 11).addLayer(cloudmade);     
-
-        /*var markerLocation = new L.LatLng(47.60, -122.21),
-        marker = new L.Marker(markerLocation);
-        map.addLayer(marker);
-        marker.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();*/
-        
-       
+        map.setView(new L.LatLng(37.2442, -89.6946), 5).addLayer(cloudmade);
+      
         map.on('click', onMapClick);
         var popup = new L.Popup();
         function onMapClick(e) {
@@ -45,27 +40,38 @@
         }); 
         
         geojsonLayer.on("featureparse", function (e) {
-var popupContent = "<p>I started out as a GeoJSON " + e.geometryType + ", but now I'm a Leaflet vector!</p>";
-if (e.geometryType == "Point") {
-popupContent += "<p>This GeoJSON Point has been transformed into a <a href='http://leaflet.cloudmade.com/reference.html#circlemarker'>CircleMarker</a> by passing a <code>pointToLayer</code> function in the <a href='http://leaflet.cloudmade.com/reference.html#geojson-options'>GeoJSON options</a> when instantiating the GeoJSON layer. View source for details.</p>";
-}
-if (e.properties && e.properties.popupContent) {
-popupContent += e.properties.popupContent;
-}
-e.layer.bindPopup(popupContent);
-if (e.properties && e.properties.style && e.layer.setStyle) {
-e.layer.setStyle(e.properties.style);
-}
-}); 
+            e.layer.bindPopup(e.properties.popupContent);
+        }); 
 
-map.addLayer(geojsonLayer)
+        map.addLayer(geojsonLayer)
 
-geojsonLayer.addGeoJSON(bicycleRental);
+        result_ids = new Array();
+        function results_refresh(event) {
+            var url = "/index.json?bbox=" + map.getBounds().toBBoxString();
+
+            $.getJSON(url, function(data) {
+                
+                $.each(data.features, function(i, feature) {
+                    
+                    if ($.inArray(feature.id, result_ids) == -1) {
+                        // not a duplicate, so we can add it
+                        geojsonLayer.addGeoJSON(feature);
+                        result_ids.push(feature.id);
+                    }
+                    
+                });
+                
+                console.log(result_ids.length + " dots loaded.");
+            });
+        }
+        
+        map.on('moveend', results_refresh);
+        
+        results_refresh(null); // not fired automatically
         
     </script>
     
     <div class="menu">
-        <h2>Files</h2>-->
             <!-- List of uploaded documents 
             {% if documents %}
                 <ul>
@@ -87,54 +93,54 @@ geojsonLayer.addGeoJSON(bicycleRental);
 
             <!-- Upload form. Note enctype attribute! -->
             
-        <form action="" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.non_field_errors }}
-                {{ form.docfile.help_text }}
-                {{ form.docfile.label_tag }}
-                {{ form.docfile.errors }}
-                {{ form.docfile }}
+        <form id="options" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <fieldset>
+                <legend>{{ form.docfile.label_tag }}</legend>
+                <p>
+                    {{ form.docfile.errors }}
+                    {{ form.docfile }}
+                </p>
+            </fieldset>
+            <fieldset>
+                <legend>Choose Options</legend>
+                <p>
+                    <input type=checkbox name=district value=States>                    
+                    <label for=name>State</label>                       
+                </p>
+                <p>
+                    <input type=checkbox name=district value=Counties>
+                    <label for=name>County</label>
+                </p>
+                <p>
+                    <input type=checkbox name=district value=Congress_Districts>           <label for=name>Congress District</label>                             
+                </p>
+                <p>
+                    <input type=checkbox name=district value=State_Leg_Upper>   
+                    <label for=name>State Leg Upper</label>
+                </p>
+                <p>
+                    <input type=checkbox name=district value=State_Leg_Lower>   
+                    <label for=name>State Leg Lower</label>
+                </p>
+                <p>
+                    <input  type=checkbox name=district value=VTDs>
+                    <label for=name>Precinct</label>
+                </p>
+                <p>
+                    <input  type=checkbox name=district value=Blocks>
+                    <label for=name>Census Block</label>
+                </p>
+            </fieldset>
+            <fieldset>
+                <legend>Add the Value!</legend>
+                    <input type="submit" value="Submit Job" />
+            </fieldset>
+        </form>
 
-        <fieldset>
-            <legend>Choose Options</legend>
-            <p>
-                <input type=checkbox name=district value=States>                    
-                <label for=name>State</label>                       
-            </p>
-            <p>
-                <input type=checkbox name=district value=Counties>
-                <label for=name>County</label>
-            </p>
-            <p>
-                <input type=checkbox name=district value=Congress_Districts>                  
-                <label for=name>Congress District</label>                             
-            </p>
-            <p>
-                <input type=checkbox name=district value=State_Leg_Upper>   
-                <label for=name>State Leg Upper</label>
-            </p>
-            <p>
-                <input type=checkbox name=district value=State_Leg_Lower>   
-                <label for=name>State Leg Lower</label>
-            </p>
-            <p>
-                <input  type=checkbox name=district value=VTDs>
-                <label for=name>Precinct</label>
-            </p>
-            <p>
-                <input  type=checkbox name=district value=Blocks>
-                <label for=name>Census Block</label>
-            </p>
-        </fieldset>
-        <fieldset>
-            <legend></legend>
-                        <input type="submit" value="Submit Job" />
-                </fieldset>
-    </form>
-
-    Files was {{contents}}
-    
-    
+		Output looks like: {{contents}}
+        
     <!-- End of menu div -->
     </div>
             
