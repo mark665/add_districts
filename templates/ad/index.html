@@ -89,7 +89,7 @@
                 <p>No content</p>
             {% endif %}
 
-            You asked for {{districts_requested}}<br />
+            You asked for: {% for districts in districts_requested %} {{districts}} {% endfor %}<br />
 
             <!-- Upload form. Note enctype attribute! -->
             
