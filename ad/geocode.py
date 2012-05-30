@@ -7,6 +7,12 @@ import json
 mapquest_osm_url = 'http://open.mapquestapi.com/nominatim/v1/search'
 mapquest_url = 'http://www.mapquestapi.com/geocoding/v1/address'
 
+options_list = {'States':('state',States),'Counties':('county',Counties),
+                'Congress_Districts':('cong',Congress_Districts),
+#                'State_Leg_Upper':('stateuppr',State_Leg_Upper),
+#                'State_Leg_Lower':('statelower',State_Leg_Lower),
+#                'VTDs':('vtd',VTDs),
+                'Blocks':('block',Blocks)}
 
 def handle_uploaded_file(uploaded_file, districts_requested):
 
@@ -56,49 +62,14 @@ def handle_uploaded_file(uploaded_file, districts_requested):
         print districts_requested
         #add additional key:value pairs 
         for district in districts_requested:
-
-            if district == 'States':
-                print district
-                try:
-                    line.update({'state':States.objects.get(geom__contains = address_point).name})
-                except States.DoesNotExist:
-                    line.update({'state':''})
-
-            if district == 'Counties':
-                try:
-                    line.update({'county':Counties.objects.get(geom__contains = address_point).name10})
-                except Counties.DoesNotExist:
-                    line.update({'county':''})
-
-            if district == 'Congress_Districts':
-                try:
-                    line.update({'congr':Congress_Districts.objects.get(geom__contains = address_point).cd112fp})
-                except Congress_Districts.DoesNotExist:
-                    line.update({'congr':''})
-
-            if district == 'State_Leg_Upper':
-                try:
-                    line.update({'stateupper':State_Leg_Upper.objects.get(geom__contains = address_point)})
-                except State_Leg_Upper.DoesNotExist:
-                    line.update({'stateupper':''})
-
-            if district == 'State_Leg_Lower':
-                try:
-                    line.update({'statelower':State_Leg_Lower.objects.get(geom__contains = address_point)})
-                except State_Leg_Lower.DoesNotExist:
-                    line.update({'statelower':''})
-
-            if district == 'VTDs':
-                try:
-                    line.update({'vtd':VTDs.objects.get(geom__contains = address_point)})
-                except VTDs.DoesNotExist:
-                    line.update({'vtd':''})
-
-            if district == 'Blocks':
-                try:
-                    line.update({'block':Blocks.objects.get(geom__contains = address_point).name})
-                except Blocks.DoesNotExist:
-                    line.update({'block':''})
+            try:
+                option_key, option_model = options_list[district]
+            except KeyError :
+                continue
+            try:
+                line.update({option_key:str(option_model.objects.get(geom__contains = address_point))})
+            except option_model.DoesNotExist:
+                line.update({key:''})
 
         results.append(line)
 
