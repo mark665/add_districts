@@ -10,8 +10,9 @@
 /lib
 lib64
 
-#ignore media files
+#ignore media files and cache
 media/*
+cache/*
 
 #ignore local_settings for django
 local_settings.py 

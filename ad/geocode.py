@@ -4,10 +4,11 @@ import csv
 from ad.models import *
 import json
 
-mapquest_osm_url = 'http://open.mapquestapi.com/nominatim/v1/search'
-mapquest_url = 'http://www.mapquestapi.com/geocoding/v1/address'
+mapquest_key = r'Fmjtd%7Cluua2duan1%2Cb2%3Do5-hrtx9'
+mapquest_url = r'http://www.mapquestapi.com/geocoding/v1/batch?key=' + mapquest_key
 
-options_list = {'States':('state',States),'Counties':('county',Counties),
+options_list = {'States':('state',States),
+                'Counties':('county',Counties),
                 'Congress_Districts':('cong',Congress_Districts),
 #                'State_Leg_Upper':('stateuppr',State_Leg_Upper),
 #                'State_Leg_Lower':('statelower',State_Leg_Lower),
@@ -16,50 +17,108 @@ options_list = {'States':('state',States),'Counties':('county',Counties),
 
 def handle_uploaded_file(uploaded_file, districts_requested):
 
-    # Create id variable for each row processed
-    row_id = 1
+    results = add_districts(batch_geocode(read_users_uploaded_csv(uploaded_file)), districts_requested)
 
-    # return value will be a list of dicts (rows of cells)
+    # TODO Add csv writer
+
+    return results_to_geojson_dict(results)
+
+
+def read_users_uploaded_csv(uploaded_file):
+    '''opens user supplied csv file and creates list of dictionaries'''
+
+    dialect = csv.Sniffer().sniff(uploaded_file.read(1024))
+    uploaded_file.seek(0)
+    addresses = csv.reader(uploaded_file, dialect)
+
+    # return value will be a list of dictionaries (rows of labeled cells)
     results = []
 
-    # TODO use csv.Sniffer to handle appropriate dialect
-    # TODO Strip out commas from addresses (and other troublesome characters)
-    
-    # open file as csv unpack on newlines
-    addresses = csv.reader(uploaded_file.read().split('\n')[:-1])
-    
+    # save first row as headers list
+    csv_headers = addresses.next()
+
+    # Create id variable for each row processed
+    ad_id = 1
+
     for address in addresses:
 
         # hold this line as a dict
         line = {}
 
-        # first key:value pair in line is
-        # an id that increments for each loop over the row
-        line.update({'id':row_id})
-        row_id += 1
- 
-        # second key:value pair in line is address
-        line.update({'addr':address})
+        # add an id that increments for each loop over row
+        line.update({'ad_id':ad_id})
+        ad_id += 1
 
-        # pack same address into a requests payload for the mapquest geocoding api
+        # use header for dict keys, address row for values
+        line.update(dict(zip((csv_headers), (address))))
+
+        # add this row to result list
+        results.append(line)
+
+    return results
+
+
+def batch_geocode(list_of_address_dictionaries):
+    '''accepts lists of dictionaries, breaks up into chuncks of 100 per request
+    dictionararies must contain keys: Address, City, State, Zip'''
+
+    # return value will be a list of dictionaries (rows of labeled cells)
+    results = []
+
+    def batches_of(rows, n=100):
+        '''yield successive n-sized chunks'''
+        for row in xrange(0, len(rows), n):
+            yield rows[row:row + n]
+
+    for batch in batches_of(list_of_address_dictionaries):
+
+        # make a copy for reassembly with results
+        batch_results = batch[:]
+
+        # package up addresses the way mapquest likes (in batch size)
+        addresses_to_query = []
+
+        for row in batch:
+            address_to_query= row['Address'] + ' ' + row['City'] + ' ' + row['State'] + ' ' + row['Zip']
+            addresses_to_query.append(address_to_query)
+
         payload = {
-          'format': 'json',
-          'q': address,
-          'addressdetails': '1',
-          'limit' : '1',
+          'location': addresses_to_query,
+          'thumbMaps': 'false',
+          'maxResults' : '1',
+          'output': 'json'
         }
-        
-        r = requests.get(mapquest_osm_url, params=payload)
-        
-        latitude, longitude = r.json[0]['lat'], r.json[0]['lon']
-        
-        # third and fourth key:value pairs
-        line.update({'lat':latitude})
-        line.update({'long':longitude})
 
-        address_point = Point(float(longitude), float(latitude))
+        geocode_response = requests.get(mapquest_url, params=payload)
+
+        latitude_results = []
+        longitude_results = []
+
+        for line in geocode_response.json['results']:
+
+            try:
+                latitude_results.append({'lat': str(line['locations'][0]['displayLatLng']['lat'])} )
+                longitude_results.append({'long': str(line['locations'][0]['displayLatLng']['lng'])} )
+
+            except:
+                latitude_results.append({'lat': ''})
+                longitude_results.append({'long': ''})
+
+        map(lambda x, y: x.update(y), batch_results, latitude_results)
+        map(lambda x, y: x.update(y), batch_results, longitude_results)
+
+        return batch_results
         
-        print districts_requested
+
+def add_districts(list_of_address_dictionaries_with_lat_lon, districts_requested):
+
+    #list of dictionaries with lat lon key value pairs with districts
+    results = []
+
+    for line in list_of_address_dictionaries_with_lat_lon:
+
+        address_point = Point(float(line['long']), float(line['lat']))
+
         #add additional key:value pairs 
         for district in districts_requested:
             try:
@@ -69,11 +128,12 @@ def handle_uploaded_file(uploaded_file, districts_requested):
             try:
                 line.update({option_key:str(option_model.objects.get(geom__contains = address_point))})
             except option_model.DoesNotExist:
-                line.update({key:''})
+                line.update({option_key:''})
 
         results.append(line)
 
-    return results_to_geojson_dict(results)
+    return results
+
 
 def results_to_geojson_dict(results):
 
@@ -85,13 +145,14 @@ def results_to_geojson_dict(results):
     
     return geojson_dict
 
+
 def line_to_geojson_feature(line):
 
     popup_content = ''
 
     #build the content of the popup
     for item in line:
-        if not (item == 'id'): 
+        if not (item == 'ad_id'): 
             popup_content += str(line[item]) +  '<br>'
         
     #Convert the line dict from above into a geojson feature
@@ -102,9 +163,9 @@ def line_to_geojson_feature(line):
             "coordinates": [str(line['long']), str(line['lat'])]
         },
         "properties": {
-            "address": line['addr'],
+            "address": line['Address'],
             #TODO add in more dict items
             "popupContent": popup_content 
         },
-        "id": line['id'],
+        "id": line['ad_id'],
     }
