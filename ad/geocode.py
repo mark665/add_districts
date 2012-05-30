@@ -87,6 +87,13 @@ def results_to_geojson_dict(results):
 
 def line_to_geojson_feature(line):
 
+    popup_content = ''
+
+    #build the content of the popup
+    for item in line:
+        if not (item == 'id'): 
+            popup_content += str(line[item]) +  '<br>'
+        
     #Convert the line dict from above into a geojson feature
     return {
         "type": "Feature",
@@ -97,7 +104,7 @@ def line_to_geojson_feature(line):
         "properties": {
             "address": line['addr'],
             #TODO add in more dict items
-            "popupContent": "%s" %(line['state']) 
+            "popupContent": popup_content 
         },
         "id": line['id'],
     }
