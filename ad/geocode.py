@@ -19,7 +19,15 @@ def handle_uploaded_file(uploaded_file, districts_requested):
 
     results = add_districts(batch_geocode(read_users_uploaded_csv(uploaded_file)), districts_requested)
 
-    # TODO Add csv writer
+    f = open('output.csv', 'wb')
+
+    writer = csv.DictWriter(f, sorted(results[0].keys()))
+    writer.writeheader()
+
+    for row in results:
+        writer.writerow(row)
+
+    f.close()
 
     return results_to_geojson_dict(results)
 
@@ -72,13 +80,16 @@ def batch_geocode(list_of_address_dictionaries):
 
     for batch in batches_of(list_of_address_dictionaries):
 
-        # make a copy for reassembly with results
+        # make a copy for reassembly as results
         batch_results = batch[:]
 
         # package up addresses the way mapquest likes (in batch size)
         addresses_to_query = []
 
         for row in batch:
+
+            #TODO add if ZIP 4 
+
             address_to_query= row['Address'] + ' ' + row['City'] + ' ' + row['State'] + ' ' + row['Zip']
             addresses_to_query.append(address_to_query)
 
@@ -106,8 +117,11 @@ def batch_geocode(list_of_address_dictionaries):
 
         map(lambda x, y: x.update(y), batch_results, latitude_results)
         map(lambda x, y: x.update(y), batch_results, longitude_results)
+        
+        for value in batch_results:
+            results.append(value)
 
-        return batch_results
+    return results
         
 
 def add_districts(list_of_address_dictionaries_with_lat_lon, districts_requested):
@@ -117,7 +131,12 @@ def add_districts(list_of_address_dictionaries_with_lat_lon, districts_requested
 
     for line in list_of_address_dictionaries_with_lat_lon:
 
-        address_point = Point(float(line['long']), float(line['lat']))
+        # handle empty strings converstion to float throws error.
+
+        if not line['long'] == '':
+            address_point = Point(float(line['long']), float(line['lat']))
+        else:
+            address_point = None
 
         #add additional key:value pairs 
         for district in districts_requested:
