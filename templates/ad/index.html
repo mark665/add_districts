@@ -16,6 +16,7 @@
             cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
         map.setView(new L.LatLng(37.2442, -89.6946), 5).addLayer(cloudmade);
       
+        /*
         map.on('click', onMapClick);
         var popup = new L.Popup();
         function onMapClick(e) {
@@ -24,7 +25,7 @@
             popup.setContent("You clicked the map at " + latlngStr);
             map.openPopup(popup);
         }
-        
+        */
         
         var geojsonLayer = new L.GeoJSON(null, {
             pointToLayer: function (latlng){
@@ -134,12 +135,12 @@
                 </p>
             </fieldset>
             <fieldset>
-                <legend>Add the Value!</legend>
+                <legend>Process</legend>
                     <input type="submit" value="Submit Job" />
             </fieldset>
         </form>
 
-		Output looks like: {{contents}}
+		<!--debug return: Output looks like: {{contents}}-->
         
     <!-- End of menu div -->
     </div>
