@@ -62,8 +62,7 @@ def home(request):
 @login_required
 def processed_files(request):
 
-#    documents = Address_List.objects.filter(user_id=request.user.id, processed=True)
-    documents = Address_List.objects.filter(user_id=request.user.id)
+    documents = Address_List.objects.filter(user_id=request.user.id, processed=True)
     return render_to_response('ad/download.html',{'documents':documents})
 
 @login_required
