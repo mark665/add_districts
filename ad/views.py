@@ -59,6 +59,13 @@ def home(request):
         context_instance=RequestContext(request)
     	)
 
+@login_required
+def processed_files(request):
+
+    documents = Address_List.objects.filter(user_id=request.user.id, processed=True)
+    return render_to_response('ad/download.html',{'documents':documents})
+
+@login_required
 def results_geojson(request):
 
     return HttpResponse(json.dumps(result_file), content_type='application/json')
