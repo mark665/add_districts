@@ -37,7 +37,7 @@ img {
 
 /* Header styles */
 #header {
-    height:80px;
+    height:40px;
 	clear:both;
 	float:left;
 	width:100%;
@@ -75,9 +75,15 @@ img {
 .menu {
      position: absolute;
      left: 80%;
+<<<<<<< HEAD
      top:10%;
      width:300px;
      bottom:30%;
+=======
+     top:20%;
+     width:200px;
+     height:500px;
+>>>>>>> bd28181b50aef327a5637ba470192eee5e141ba1
      z-index:10;
      padding: 5px;
      opacity:0.75;

@@ -19,7 +19,7 @@ class Congress_Districts(models.Model):
   objects = models.GeoManager()
 
   def __unicode__(self):
-    return self.namelsad
+    return self.cd112fp
 
 class Counties(models.Model):
   statefp10 = models.CharField(max_length=2)
@@ -43,7 +43,7 @@ class Counties(models.Model):
   objects = models.GeoManager()
 
   def __unicode__(self):
-    return self.namelsad10
+    return self.name10
 
 class States(models.Model):
   region = models.CharField(max_length=2)
@@ -88,7 +88,7 @@ class Blocks(models.Model):
   objects = models.GeoManager()
 
   def __unicode__(self):
-    return self.name
+    return self.geoid
 
 
 def get_media_upload_dir(instance, filename):
