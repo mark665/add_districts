@@ -2,6 +2,7 @@ from ad.models import *
 from ad.forms import *
 from ad.geocode import handle_uploaded_file
 import json
+from django.contrib.gis.geos import *
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -10,7 +11,6 @@ from django.core.urlresolvers import reverse
 from django.template import Context,loader
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-
 
 @login_required
 def home(request):
@@ -57,8 +57,42 @@ def home(request):
         'ad/index.html',
         {'documents': documents[:5], 'form': form},
         context_instance=RequestContext(request)
-    	)
+        )
 
 def results_geojson(request):
+    layer_id = request.GET.get('layer')
+    if layer_id == 'results':
+        try:
+            return HttpResponse(json.dumps(result_file), content_type='application/json')
+        except:
+            return HttpResponseRedirect(reverse('ad.views.home'))
+    
+    elif layer_id == 'States':       
+        #coords = request.GET['bbox'].split(',')
+        #bbox = Polygon.from_bbox(coords)
+    
+        query_set = States.objects.all()
+        #query_set = States.objects.filter(geom__bboverlaps=bbox)
+    
+        # Build a geojson dict to hold list of features
+        geojson_dict = {}
+        
+        # Build a list of features
+        features = []
+        
+        for item in query_set:
+        #Build a feature
+            feature = {}
+            feature['type'] = 'Feature'
+            geojson = item.geom.simplify(0.0001).geojson
+            feature['geometry'] = (json.loads(geojson)) # convert to dict so whole list can be converted to json
+            feature['properties'] = { 'name':item.name}
+            features.append(feature)
+                      
+        #Build a feature collection
+        geojson_dict['type'] = "FeatureCollection"    
+        geojson_dict['features'] = features
+    
+        return HttpResponse(json.dumps(geojson_dict), content_type='application/json')
 
-    return HttpResponse(json.dumps(result_file), content_type='application/json')
+   

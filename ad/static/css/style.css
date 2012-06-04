@@ -74,14 +74,14 @@ img {
 
 .menu {
      position: absolute;
-     left: 75%;
-     top:20%;
+     left: 80%;
+     top:10%;
      width:300px;
-     height:500px;
+     bottom:30%;
      z-index:10;
      padding: 5px;
      opacity:0.75;
-     overflow:scroll;
+     overflow:auto;
      background:#3e3e3e;
 }
 #map {

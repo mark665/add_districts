@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'ad.views.home', name='home'),
     url(r'^index.json$', 'ad.views.results_geojson'),
-
+	#url(r'^index/layer/$', 'ad.views.results_geojson'),
     # url(r'^add_districts/', include('add_districts.foo.urls')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout'),
