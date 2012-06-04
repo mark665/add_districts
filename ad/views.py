@@ -102,8 +102,5 @@ def results_geojson(request):
     
         return HttpResponse(json.dumps(geojson_dict), content_type='application/json')
 
-<<<<<<< HEAD
-   
-=======
-    return HttpResponse(json.dumps(result_file), content_type='application/json')
->>>>>>> bd28181b50aef327a5637ba470192eee5e141ba1
+#line below is merge conflict, commenting out to debug
+#    return HttpResponse(json.dumps(result_file), content_type='application/json')

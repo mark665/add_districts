@@ -8,13 +8,3 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    'C:/Users/Shruti/Projects/add_districts/templates',
-)
-
-MEDIA_ROOT = 'C:/Users/Shruti/Projects/add_districts/cache'
-
