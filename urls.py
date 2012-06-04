@@ -12,13 +12,7 @@ urlpatterns = patterns('',
 
     url(r'^$', 'ad.views.home', name='home'),
     url(r'^index.json$', 'ad.views.results_geojson'),
-<<<<<<< HEAD
-	#url(r'^index/layer/$', 'ad.views.results_geojson'),
-    # url(r'^add_districts/', include('add_districts.foo.urls')),
-=======
-
     url(r'^processed$', 'ad.views.processed_files'),
->>>>>>> bd28181b50aef327a5637ba470192eee5e141ba1
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout'),
 
