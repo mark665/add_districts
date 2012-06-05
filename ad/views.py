@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.template import Context,loader
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.contrib.sites.models import Site
 
 @login_required
 def home(request):
@@ -32,10 +33,13 @@ def home(request):
             # Load list of documents in cache dir
             documents = Address_List.objects.filter(user_id=request.user.id)
 
+            result_url = Site.objects.get_current().domain + str(newdoc.address_list)
             # Render home page with the documents, form, requested districts
             return render_to_response(
                 'ad/index.html',
-                {'documents': documents[:5], 'form': form, 'districts_requested': districts_requested, 'contents': result_file},
+                {'result_url': result_url,
+                 'form': form, 'districts_requested': districts_requested,
+                 'contents': result_file},
                 context_instance=RequestContext(request)
             )
             #return HttpResponse(json.dumps(geojson_dict), content_type='application/json')

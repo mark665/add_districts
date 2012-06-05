@@ -13,24 +13,6 @@
     <script src="{% get_static_prefix %}scripts/map.js" type="text/javascript"></script>
 
     <div class="menu">
-            <!-- List of uploaded documents 
-            {% if documents %}
-                <ul>
-                    {% for document in documents %}
-                        <li><a href="{{ document.address_list.url }}">{{ document.address_list.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No documents.</p>
-            {% endif %}
-            
-            {% if contents %}
-                <p> Got Content </p>
-            {% else %}
-                <p>No content</p>
-            {% endif %}
-
-            You asked for: {% for districts in districts_requested %} {{districts}} {% endfor %}<br />-->
 
             <!-- Upload form. Note enctype attribute! -->
             
@@ -80,9 +62,9 @@
                     <input type="submit" value="Submit Job" />
             </fieldset>
         </form>
-
-        debug return: Output looks like: {{contents}}
-       
+        {% if result_url %}
+        <a href={{ result_url }}>Download Results</a>
+        {% endif  %}
     <!-- End of menu div -->
     </div>
             

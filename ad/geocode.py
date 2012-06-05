@@ -23,6 +23,10 @@ def handle_uploaded_file(uploaded_address_list, districts_requested):
     upload_file = open(str(uploaded_address_list.address_list), 'wb')
     write_results_to_file(upload_file,results)
 
+    # once written, mark file as processed
+    uploaded_address_list.processed=True
+    uploaded_address_list.save()
+
     return results_to_geojson_dict(results)
 
 def write_results_to_file(output_file,results):
@@ -33,10 +37,8 @@ def write_results_to_file(output_file,results):
     for row in results:
         writer.writerow(row)
 
-    ouput_file.close()
-    # once written, mark file as processed
-    uploaded_address_list.processed=True
-    uploaded_address_list.save()
+    output_file.close()
+
 
 def read_users_uploaded_csv(uploaded_file):
     '''opens user supplied csv file and creates list of dictionaries'''
