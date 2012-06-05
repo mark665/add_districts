@@ -20,17 +20,14 @@
             {% csrf_token %}
             {{ form.non_field_errors }}
             <fieldset>
-                <legend>{{ form.docfile.label_tag }}</legend>
-                <p>
-                    {{ form.docfile.errors }}
-                    {{ form.docfile }}
-                </p>
+                <legend>{{ form.docfile }}</legend>
+                        {{ form.docfile.errors }}
             </fieldset>
             <fieldset>
-                <legend>Choose Options</legend>
+                <legend>Select Districts</legend>
                 <p>
-                    <input type=checkbox name=district value=States>                    
-                    <label for=name>State</label>                       
+                    <input type=checkbox name=district value=States>
+                    <label for=name >State</label>                       
                 </p>
                 <p>
                     <input type=checkbox name=district value=Counties>
@@ -58,13 +55,20 @@
                 </p>
             </fieldset>
             <fieldset>
-                <legend>Process</legend>
-                    <input type="submit" value="Submit Job" />
+                <legend>
+                    <input class="btn btn-primary" type="submit" value="Submit Job" />
+                </legend>
             </fieldset>
-        </form>
+        
         {% if result_url %}
-        <a href={{ result_url }}>Download Results</a>
+        <fieldset>
+            <legend>
+                <a class="btn btn-success" href={{ result_url }}> Download Results  <i class="icon-download-alt icon-white"></i></a>
+            </legend>
+        </fieldset>
         {% endif  %}
+
+        </form>
     <!-- End of menu div -->
     </div>
             
