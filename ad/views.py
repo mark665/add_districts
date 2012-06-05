@@ -27,7 +27,7 @@ def home(request):
             districts_requested = request.POST.getlist('district')
             
             global result_file
-            result_file = handle_uploaded_file(newdoc.address_list, districts_requested)
+            result_file = handle_uploaded_file(newdoc, districts_requested)
 
             # Load list of documents in cache dir
             documents = Address_List.objects.filter(user_id=request.user.id)

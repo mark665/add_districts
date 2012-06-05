@@ -16,23 +16,23 @@ options_list = {'States':('state',States),
 #                'VTDs':('vtd',VTDs),
                 'Blocks':('block',Blocks)}
 
-def handle_uploaded_file(uploaded_file, districts_requested):
+def handle_uploaded_file(uploaded_address_list, districts_requested):
 
-    results = add_districts(geocode_mapquest_batch(read_users_uploaded_csv(uploaded_file)), districts_requested)
+    results = add_districts(geocode_mapquest_batch(read_users_uploaded_csv(uploaded_address_list.address_list)), districts_requested)
     #results = add_districts(geocode_mapquest_osm(read_users_uploaded_csv(uploaded_file)), districts_requested)
 
-    '''# TODO csv writting
-    f = open('output.csv', 'wb')
+    upload_file = open(str(uploaded_address_list.address_list), 'wb')
 
-    writer = csv.DictWriter(f, sorted(results[0].keys()))
+    writer = csv.DictWriter(upload_file, sorted(results[0].keys()))
     writer.writeheader()
 
     for row in results:
         writer.writerow(row)
 
-    f.close()
-    '''
-    
+    upload_file.close()
+    uploaded_address_list.processed=True
+    uploaded_address_list.save()
+
     return results_to_geojson_dict(results)
 
 
