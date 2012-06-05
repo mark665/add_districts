@@ -20,21 +20,23 @@ def handle_uploaded_file(uploaded_address_list, districts_requested):
 
     results = add_districts(geocode_mapquest_batch(read_users_uploaded_csv(uploaded_address_list.address_list)), districts_requested)
     #results = add_districts(geocode_mapquest_osm(read_users_uploaded_csv(uploaded_file)), districts_requested)
-
     upload_file = open(str(uploaded_address_list.address_list), 'wb')
+    write_results_to_file(upload_file,results)
 
-    writer = csv.DictWriter(upload_file, sorted(results[0].keys()))
+    return results_to_geojson_dict(results)
+
+def write_results_to_file(output_file,results):
+
+    writer = csv.DictWriter(output_file, sorted(results[0].keys()))
     writer.writeheader()
 
     for row in results:
         writer.writerow(row)
 
-    upload_file.close()
+    ouput_file.close()
+    # once written, mark file as processed
     uploaded_address_list.processed=True
     uploaded_address_list.save()
-
-    return results_to_geojson_dict(results)
-
 
 def read_users_uploaded_csv(uploaded_file):
     '''opens user supplied csv file and creates list of dictionaries'''
