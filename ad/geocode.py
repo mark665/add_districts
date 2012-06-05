@@ -3,6 +3,7 @@ import requests
 import csv
 from ad.models import *
 import json
+from collections import OrderedDict
 
 mapquest_key = r'Fmjtd%7Cluua2duan1%2Cb2%3Do5-hrtx9'
 mapquest_url = r'http://www.mapquestapi.com/geocoding/v1/batch?key=' + mapquest_key
@@ -31,7 +32,7 @@ def handle_uploaded_file(uploaded_address_list, districts_requested):
 
 def write_results_to_file(output_file,results):
 
-    writer = csv.DictWriter(output_file, sorted(results[0].keys()))
+    writer = csv.DictWriter(output_file, results[0].keys())
     writer.writeheader()
 
     for row in results:
@@ -58,15 +59,12 @@ def read_users_uploaded_csv(uploaded_file):
 
     for address in addresses:
 
-        # hold this line as a dict
-        line = {}
+        # hold this line as a dict, use header for dict keys, address row for values
+        line = OrderedDict(zip((csv_headers), (address)))
 
         # add an id that increments for each loop over row
         line.update({'ad_id':ad_id})
         ad_id += 1
-
-        # use header for dict keys, address row for values
-        line.update(dict(zip((csv_headers), (address))))
 
         # add this row to result list
         results.append(line)
