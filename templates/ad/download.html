@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="background">
+            <!-- List of uploaded documents -->
+            {% if documents %}
+                <ul>
+                    {% for document in documents %}
+                        <li><a href="{{ document.address_list.url }}">{{ document.address_list.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No files processed yet, check back again later.</p>
+            {% endif %}
+
+<!-- End of background div -->
+</div>
+{% endblock %}
+
